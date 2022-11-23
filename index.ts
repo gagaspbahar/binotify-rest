@@ -16,6 +16,18 @@ app.post("/login", (req: Request, res: Response) => {
   
 });
 
+app.post("/register", (req: Request, res: Response) => {
+
+});
+
+app.get("/artists", (req: Request, res: Response) => {
+
+});
+
+app.get("/songs/:id", (req: Request, res: Response) => {
+  req.params.id;
+});
+
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
