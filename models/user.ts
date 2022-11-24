@@ -1,13 +1,7 @@
 import { PoolClient, Pool } from 'pg';
 import Database from '../core/database';
+import User from '../types/user';
 
-type User = {
-  username: string;
-  password: string;
-  email: string;
-  name: string;
-  isAdmin?: boolean;
-}
 
 class UserModel {
   pool: Pool;
@@ -15,6 +9,7 @@ class UserModel {
     this.pool = new Database().pool;
   }
   static rowsToUser(row: any): User {
+    console.log(row)
     return {
       username: row.username,
       password: row.password,
@@ -73,4 +68,4 @@ class UserModel {
   }
 }
 
-export {UserModel, User};
+export default UserModel;

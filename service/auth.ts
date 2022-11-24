@@ -1,15 +1,17 @@
 import dotenv from "dotenv";
-import { User, UserModel } from "../models/user";
+import UserModel from "../models/user";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import User from "../types/user";
+import { LoginRequest } from "../types/request";
 
 const jwt = require("jsonwebtoken");
 
 dotenv.config();
 
-const loginHandler = async (req: Request<User>, res: Response) => {
+const loginHandler = async (req: Request<LoginRequest>, res: Response) => {
   const userModel = new UserModel();
-  const email = req.body?.email;
+  const username = req.body?.username;
   const password = req.body?.password;
   bcrypt.hash(password, 10, async (err, hash) => {
     if (err) {
@@ -17,7 +19,7 @@ const loginHandler = async (req: Request<User>, res: Response) => {
         error: err,
       });
     } else {
-      const user = await userModel.findOneByEmail(email);
+      const user = await userModel.findOneByUsername(username);
       if (user) {
         bcrypt.compare(password, user.password, (err, result) => {
           if (err) {
