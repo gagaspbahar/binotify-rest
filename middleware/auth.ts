@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { JsonWebTokenError } from "jsonwebtoken";
-import { User } from "../models/user";
+import User from "../types/user";
 
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
