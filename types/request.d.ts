@@ -3,4 +3,9 @@ type LoginRequest = {
   password: string;
 }
 
-export { LoginRequest }
+type SongRequest = {
+  title: string;
+  penyanyi: string;
+}
+
+export { LoginRequest, SongRequest }

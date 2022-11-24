@@ -1,15 +1,17 @@
-import { PoolClient } from 'pg';
+import { Pool, PoolClient } from 'pg';
+import Database from '../core/database';
+import Song from '../types/song';
+
 const database = require('../core/database');
 const client: PoolClient = database.client;
 
-type Song = {
-  songId: number;
-  title: string;
-  artist_id: number;
-  audio_path: string;
-}
 
 class SongModel {
+  pool: Pool;
+  constructor() {
+    this.pool = new Database().pool;
+  }
+
   static rowsToSong(row: any): Song {
     return {
       songId: row.song_id,
@@ -19,37 +21,40 @@ class SongModel {
     };
   }
 
-  static async create(title: string, artist_id: number, audio_path: string) {
-    const result = await client.query(
+  async create(title: string, artist_id: number, audio_path: string) {
+    const result = await this.pool.query(
       `INSERT INTO songs (title, artist_id, audio_path) VALUES ($1, $2, $3) RETURNING song_id`,
       [title, artist_id, audio_path]
     );
     return result.rows[0].song_id;
   }
 
-  static async findSongById(id: number) {
-    const result = await client.query(
+  async findSongById(id: number) {
+    const result = await this.pool.query(
       `SELECT * FROM songs WHERE song_id = $1`,
       [id]
     );
-    return this.rowsToSong(result.rows[0]);
+    return SongModel.rowsToSong(result.rows[0]);
   }
-  static async findSongByTitle(title: string) {
-    const result = await client.query(
+
+  async findSongByTitle(title: string) {
+    const result = await this.pool.query(
       `SELECT * FROM songs WHERE title = $1`,
       [title]
     );
-    return this.rowsToSong(result.rows[0]);
+    return SongModel.rowsToSong(result.rows[0]);
   }
-  static async findSongsByArtistId(artist_id: number) {
-    const result = await client.query(
+
+  async findSongsByArtistId(artist_id: number) {
+    const result = await this.pool.query(
       `SELECT * FROM songs WHERE artist_id = $1`,
       [artist_id]
     );
-    return result.rows.map(this.rowsToSong);
+    return result.rows.map(SongModel.rowsToSong);
   }
-  static async update(songId: number, title: string, artist_id: number, audio_path: string) {
-    const result = await client.query(
+
+  async update(songId: number, title: string, artist_id: number, audio_path: string) {
+    const result = await this.pool.query(
       `UPDATE songs SET title = $1, artist_id = $2, audio_path = $3 WHERE song_id = $4 RETURNING song_id`,
       [title, artist_id, audio_path, songId]
     );

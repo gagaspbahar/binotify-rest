@@ -21,7 +21,7 @@ const loginHandler = async (req: Request<LoginRequest>, res: Response) => {
     } else {
       const user = await userModel.findOneByUsername(username);
       if (user) {
-        bcrypt.compare(password, user.password, (err, result) => {
+        bcrypt.compare(password, user.password!, (err, result) => {
           if (err) {
             res.status(401).json({
               message: "Login failed",
@@ -58,7 +58,7 @@ const registerHandler = async (req: Request<User>, res: Response) => {
   const initialUser: User = req.body;
   const user = {isAdmin: false, ...initialUser};
   console.log(user)
-  user.password = await bcrypt.hash(user.password, 10);
+  user.password = await bcrypt.hash(user.password!, 10);
   try {
     const userModel = new UserModel();
     const newUserID = await userModel.create(user);
