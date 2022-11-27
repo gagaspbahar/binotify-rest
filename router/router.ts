@@ -13,7 +13,7 @@ import {
   deleteSongHandler,
 } from "../service/song";
 
-import { songListHandler }  from "../service/artist";
+import { songListHandler, artistListHandler } from "../service/artist";
 
 router.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server - Hello World!");
@@ -32,5 +32,7 @@ router.put("/song/:id", updateSongHandler);
 router.delete("/song/:id", deleteSongHandler);
 
 router.get("/song/artist/:id", songListHandler);
+
+router.get("/artist", artistListHandler);
 
 module.exports = router;
