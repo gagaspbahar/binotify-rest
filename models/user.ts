@@ -18,7 +18,7 @@ class UserModel {
       isAdmin: row.is_admin,
     };
   }
-  
+
   async create(user: User) {
     const result = await this.pool.query(
       `INSERT INTO users (username, password, email, name, is_admin) VALUES ($1, $2, $3, $4, false) RETURNING user_id`,
@@ -59,9 +59,10 @@ class UserModel {
     return result.rows[0].name;
   }
 
-  async findArtists() {
+  async findArtists(page: number) {
     const result = await this.pool.query(
-      `SELECT * FROM users WHERE is_admin = false`
+      `SELECT * FROM users WHERE is_admin = false LIMIT 10 OFFSET $1`,
+      [page]
     );
     return result.rows.map(UserModel.rowsToUser);
   }
