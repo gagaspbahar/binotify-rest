@@ -5,6 +5,7 @@ import multerUpload from "./middleware/file";
 
 const path = require("path");
 const router = require("./router/router");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const app: Express = express();
 const port = process.env.PORT;
 
 console.log(path.join(__dirname, "static"));
+app.use(cors());
 app.use("/static", express.static(path.join(__dirname, "static")));
 app.use(express.static("static"));
 app.use(multerUpload);
