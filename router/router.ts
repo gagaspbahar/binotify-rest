@@ -15,6 +15,8 @@ import {
 
 import { songListHandler, artistListHandler } from "../service/artist";
 
+import { authenticateUser, authenticateAdmin, authenticateSpecificUser } from "../middleware/auth";
+
 router.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server - Hello World!");
 });
@@ -22,6 +24,8 @@ router.get("/", (req: Request, res: Response) => {
 router.post("/login", loginHandler);
 
 router.post("/register", registerHandler);
+
+router.use("/song", authenticateUser);
 
 router.post("/song", createSongHandler);
 
@@ -32,6 +36,8 @@ router.put("/song/:id", updateSongHandler);
 router.delete("/song/:id", deleteSongHandler);
 
 router.get("/song/artist/:id", songListHandler);
+
+router.use("/artist",authenticateAdmin);
 
 router.get("/artist", artistListHandler);
 

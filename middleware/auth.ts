@@ -1,29 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 import { JsonWebTokenError } from "jsonwebtoken";
 import User from "../types/user";
+import AuthCheckModel from '../models/authCheck';
 
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 
 dotenv.config();
 
-function generateAccessToken(
-  username: string,
-  email: string,
-  isAdmin: boolean
-) {
-  return jwt.sign(
-    { username: username, email: email, isAdmin: isAdmin },
-    process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "1h" }
-  );
-}
-
 function verifyToken(token: string) {
   return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 }
 
-function authenticate(req: Request, res: Response, next: NextFunction) {
+function authenticateUser(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.sendStatus(401);
@@ -32,16 +21,71 @@ function authenticate(req: Request, res: Response, next: NextFunction) {
     token,
     process.env.ACCESS_TOKEN_SECRET,
     (err: JsonWebTokenError, user: any) => {
-      if (err) return res.sendStatus(403);
-      res.status(200).json({
-        success: "true",
-        data: {
-          username: user.username,
-          email: user.email,
-          isAdmin: user.isAdmin,
-        },
-      });
-      next();
+      if (err) return next(err);
+      return next();
     }
   );
 }
+
+function authenticateAdmin(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(
+    token,
+    process.env.ACCESS_TOKEN_SECRET,
+    (err: JsonWebTokenError, user: any) => {
+      if (err) return next(err);
+      if (user.isAdmin) return next();
+      else return next(err);
+    }
+  );
+}
+
+function authenticateSpecificUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(
+    token,
+    process.env.ACCESS_TOKEN_SECRET,
+    (err: JsonWebTokenError, user: any) => {
+      if (err) return next(err);
+      if (user.user_id === req.params.id) return next();
+      else return next(err);
+    }
+  );
+}
+
+// function authenticateUserBySongId(
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) {
+//   const authHeader = req.headers["authorization"];
+//   const token = authHeader && authHeader.split(" ")[1];
+//   if (token == null) return res.sendStatus(401);
+
+
+//   jwt.verify(
+//     token,
+//     process.env.ACCESS_TOKEN_SECRET,
+//     (err: JsonWebTokenError, user: any) => {
+//       const authCheckModel = new AuthCheckModel();
+//       const songId = parseInt(req.params.id);
+//       const userId = user.user_id;
+//       const checkSong = await authCheckModel.checkSong(songId, userId);
+//       if (err) return next(err);
+//       if (user.user_id === req.params.user_id && checkSong) return next();
+//       else return next(err);
+//     }
+//   );
+// }
+
+export { authenticateUser, authenticateAdmin, authenticateSpecificUser };
