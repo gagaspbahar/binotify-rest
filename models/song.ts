@@ -1,8 +1,6 @@
-import { Pool, PoolClient } from "pg";
+import { Pool } from "pg";
 import Database from "../core/database";
 import Song from "../types/song";
-
-const database = require("../core/database");
 
 class SongModel {
   pool: Pool;
@@ -43,13 +41,14 @@ class SongModel {
     return SongModel.rowsToSong(result.rows[0]);
   }
 
-  async findSongsByArtistId(artist_id: number) {
+  async findSongsByArtistId(artist_id: number, offset: number) {
     const result = await this.pool.query(
-      `SELECT * FROM songs WHERE penyanyi_id = $1`,
-      [artist_id]
+      `SELECT * FROM songs WHERE penyanyi_id = $1 LIMIT 10 OFFSET $2`,
+      [artist_id, offset]
     );
     return result.rows.map(SongModel.rowsToSong);
   }
+
 
   async update(
     songId: number,

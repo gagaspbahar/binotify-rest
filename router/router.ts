@@ -1,15 +1,19 @@
 import express, { Request, Response, Express } from "express";
 
+import { loginHandler, registerHandler } from "../service/auth";
+
 const router = express.Router();
 
-const { loginHandler, registerHandler } = require("../service/auth");
+// const { loginHandler, registerHandler } = require("../service/auth");
 
-const {
+import {
   createSongHandler,
   readSongHandler,
   updateSongHandler,
   deleteSongHandler,
-} = require("../service/song");
+} from "../service/song";
+
+import { songListHandler }  from "../service/artist";
 
 router.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server - Hello World!");
@@ -26,5 +30,7 @@ router.get("/song/:id", readSongHandler);
 router.put("/song/:id", updateSongHandler);
 
 router.delete("/song/:id", deleteSongHandler);
+
+router.get("/song/artist/:id", songListHandler);
 
 module.exports = router;

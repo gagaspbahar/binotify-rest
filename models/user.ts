@@ -18,6 +18,7 @@ class UserModel {
       isAdmin: row.is_admin,
     };
   }
+  
   async create(user: User) {
     const result = await this.pool.query(
       `INSERT INTO users (username, password, email, name, is_admin) VALUES ($1, $2, $3, $4, false) RETURNING user_id`,
