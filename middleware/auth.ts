@@ -7,7 +7,11 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-function generateAccessToken(username: string, email: string, isAdmin: boolean) {
+function generateAccessToken(
+  username: string,
+  email: string,
+  isAdmin: boolean
+) {
   return jwt.sign(
     { username: username, email: email, isAdmin: isAdmin },
     process.env.ACCESS_TOKEN_SECRET,
@@ -40,5 +44,4 @@ function authenticate(req: Request, res: Response, next: NextFunction) {
       next();
     }
   );
-  
 }

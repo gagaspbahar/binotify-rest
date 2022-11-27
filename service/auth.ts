@@ -54,10 +54,10 @@ const loginHandler = async (req: Request<LoginRequest>, res: Response) => {
 };
 
 const registerHandler = async (req: Request<User>, res: Response) => {
-  console.log(req.body)
+  console.log(req.body);
   const initialUser: User = req.body;
-  const user = {isAdmin: false, ...initialUser};
-  console.log(user)
+  const user = { isAdmin: false, ...initialUser };
+  console.log(user);
   user.password = await bcrypt.hash(user.password!, 10);
   try {
     const userModel = new UserModel();

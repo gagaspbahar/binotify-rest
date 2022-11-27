@@ -1,10 +1,8 @@
-import { Pool, PoolClient } from 'pg';
-import Database from '../core/database';
-import Song from '../types/song';
+import { Pool, PoolClient } from "pg";
+import Database from "../core/database";
+import Song from "../types/song";
 
-const database = require('../core/database');
-const client: PoolClient = database.client;
-
+const database = require("../core/database");
 
 class SongModel {
   pool: Pool;
@@ -53,7 +51,12 @@ class SongModel {
     return result.rows.map(SongModel.rowsToSong);
   }
 
-  async update(songId: number, title: string, artist_id: number, audio_path: string) {
+  async update(
+    songId: number,
+    title: string,
+    artist_id: number,
+    audio_path: string
+  ) {
     const result = await this.pool.query(
       `UPDATE songs SET judul = $1, penyanyi_id = $2, audio_path = $3 WHERE song_id = $4 RETURNING song_id`,
       [title, artist_id, audio_path, songId]
@@ -68,7 +71,7 @@ class SongModel {
     );
     return result.rowCount;
   }
-  
+
   async getLink(songId: number) {
     const result = await this.pool.query(
       `SELECT audio_path FROM songs WHERE song_id = $1`,
