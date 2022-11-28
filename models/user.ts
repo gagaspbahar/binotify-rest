@@ -17,6 +17,7 @@ class UserModel {
   }
   static rowsToUser(row: any): User {
     return {
+      userId: row.user_id,
       username: row.username,
       password: row.password,
       email: row.email,
