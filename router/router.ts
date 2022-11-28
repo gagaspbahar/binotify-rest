@@ -37,8 +37,6 @@ router.delete("/song/:id", deleteSongHandler);
 
 router.get("/song/artist/:id", songListHandler);
 
-router.use("/artist",authenticateAdmin);
-
 router.get("/artist", artistListHandler);
 
 module.exports = router;
