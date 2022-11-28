@@ -13,44 +13,50 @@ const loginHandler = async (req: Request<LoginRequest>, res: Response) => {
   const userModel = new UserModel();
   const username = req.body?.username;
   const password = req.body?.password;
-  bcrypt.hash(password, 10, async (err, hash) => {
-    if (err) {
-      res.status(500).json({
-        error: err,
-      });
-    } else {
-      const user = await userModel.findOneByUsername(username);
-      if (user) {
-        bcrypt.compare(password, user.password!, (err, result) => {
-          if (err) {
+  try {
+    bcrypt.hash(password, 10, async (err, hash) => {
+      if (err) {
+        res.status(500).json({
+          error: err,
+        });
+      } else {
+        const user = await userModel.findOneByUsername(username);
+        if (user) {
+          bcrypt.compare(password, user.password!, (err, result) => {
+            if (err) {
+              res.status(401).json({
+                message: "Login failed",
+              });
+            }
+            if (result) {
+              const token = jwt.sign(
+                {
+                  username: user.username,
+                  email: user.email,
+                  isAdmin: user.isAdmin,
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                {
+                  expiresIn: "1h",
+                }
+              );
+              return res.status(200).json({
+                message: "Login successful. Logged in as " + user.username,
+                token: token,
+              });
+            }
             res.status(401).json({
               message: "Login failed",
             });
-          }
-          if (result) {
-            const token = jwt.sign(
-              {
-                username: user.username,
-                email: user.email,
-                isAdmin: user.isAdmin,
-              },
-              process.env.ACCESS_TOKEN_SECRET,
-              {
-                expiresIn: "1h",
-              }
-            );
-            return res.status(200).json({
-              message: "Login successful. Logged in as " + user.username,
-              token: token,
-            });
-          }
-          res.status(401).json({
-            message: "Login failed",
           });
-        });
+        }
       }
-    }
-  });
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: err,
+    });
+  }
 };
 
 const registerHandler = async (req: Request<User>, res: Response) => {
