@@ -1,7 +1,14 @@
-import { PoolClient, Pool } from 'pg';
-import Database from '../core/database';
-import User from '../types/user';
+import { PoolClient, Pool } from "pg";
+import Database from "../core/database";
+import User from "../types/user";
 
+const nullUser: User = {
+  username: "",
+  password: "",
+  email: "",
+  name: "",
+  isAdmin: false,
+};
 
 class UserModel {
   pool: Pool;
@@ -9,7 +16,6 @@ class UserModel {
     this.pool = new Database().pool;
   }
   static rowsToUser(row: any): User {
-    console.log(row)
     return {
       username: row.username,
       password: row.password,
@@ -32,7 +38,12 @@ class UserModel {
       `SELECT * FROM users WHERE username = $1`,
       [username]
     );
-    return UserModel.rowsToUser(result.rows[0]);
+
+    if (result.rows.length == 0) {
+      return nullUser;
+    } else {
+      return UserModel.rowsToUser(result.rows[0]);
+    }
   }
 
   async findOneByEmail(email: string) {
@@ -40,7 +51,12 @@ class UserModel {
       `SELECT * FROM users WHERE email = $1`,
       [email]
     );
-    return UserModel.rowsToUser(result.rows[0]);
+
+    if (result.rows.length == 0) {
+      return nullUser;
+    } else {
+      return UserModel.rowsToUser(result.rows[0]);
+    }
   }
 
   async findOneById(id: number) {
@@ -48,7 +64,11 @@ class UserModel {
       `SELECT * FROM users WHERE user_id = $1`,
       [id]
     );
-    return UserModel.rowsToUser(result.rows[0]);
+    if (result.rows.length == 0) {
+      return nullUser;
+    } else {
+      return UserModel.rowsToUser(result.rows[0]);
+    }
   }
 
   async findNameById(id: number) {
@@ -56,7 +76,12 @@ class UserModel {
       `SELECT name FROM users WHERE user_id = $1`,
       [id]
     );
-    return result.rows[0].name;
+
+    if (result.rows.length == 0) {
+      return nullUser.name;
+    } else {
+      return result.rows[0].name;
+    }
   }
 
   async findArtists(page: number) {
