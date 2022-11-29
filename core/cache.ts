@@ -1,5 +1,8 @@
 import { createClient } from "redis";
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 export class Cache {
   private cache: ReturnType<typeof createClient>;
   private ttl: number = 60 * 60 * 24; // 1 day
@@ -7,7 +10,7 @@ export class Cache {
   constructor(ttl?: number) {
     this.ttl = ttl || this.ttl;
     this.cache = createClient({
-      url: "redis://localhost:6379",
+      url: process.env.URL || "redis://localhost:6379",
     });
     this.cache.on("connect", () => {
       console.log("Redis client connected");

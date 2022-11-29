@@ -11,5 +11,14 @@ services:
       dockerfile: Dockerfile
     environment:
       - UPLOAD_LIMIT=10M
+    depends_on:
+      - redis
     # working_dir: /app
     # command: pm2-runtime index.js
+  redis:
+    image: redis:7-alpine
+    ports:
+      - 6379:6379
+    command: redis-server
+    environment:
+      - URL=redis://localhost:6379
