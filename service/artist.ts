@@ -19,12 +19,6 @@ const songListHandler = async (req: Request, res: Response) => {
       xml: xml,
     });
     const { headers, body, statusCode } = response;
-  } catch (err) {
-    res.status(500).json({
-      message: "Error " + err,
-    });
-  }
-  try {
     if((body as string).includes("ACCEPTED")) {
       const songList = await songModel.findSongsByArtistId(artistId, page * 10 - 10);
       res.status(200).json({
