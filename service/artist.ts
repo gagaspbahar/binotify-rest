@@ -2,6 +2,7 @@ import { SongModel } from "../models/song";
 import { Request, Response } from "express";
 import UserModel from "../models/user";
 import { checkSubscription } from "../templates/soapTemplates";
+import { Cache } from "../core/cache";
 const util = require("util");
 const soapRequest = require('easy-soap-request');
 
@@ -11,12 +12,18 @@ const songListHandler = async (req: Request, res: Response) => {
   const userId = parseInt(req.query["user_id"] as string);
   const artistId = parseInt(req.params.id);
   const xml = util.format(checkSubscription.template, userId, artistId);
-  const { response } = await soapRequest({
-    url: checkSubscription.url,
-    headers: checkSubscription.headers,
-    xml: xml,
-  });
-  const { headers, body, statusCode } = response;
+  try {
+    const { response } = await soapRequest({
+      url: checkSubscription.url,
+      headers: checkSubscription.headers,
+      xml: xml,
+    });
+    const { headers, body, statusCode } = response;
+  } catch (err) {
+    res.status(500).json({
+      message: "Error " + err,
+    });
+  }
   try {
     if((body as string).includes("ACCEPTED")) {
       const songList = await songModel.findSongsByArtistId(artistId, page * 10 - 10);
@@ -40,11 +47,16 @@ const songListHandler = async (req: Request, res: Response) => {
 };
 
 const artistListHandler = async (req: Request, res: Response) => {
+  const cache: Cache = new Cache();
+  await cache.connect();
   const userModel: UserModel = new UserModel();
   const page = parseInt(req.query.page as string);
   try {
-    const artists = await userModel.findArtists(page * 10 - 10);
-    const artistList = artists.map((artist) => {
+    const artistCached = await cache.get("artistList", async () => {
+      return await userModel.findArtists(page * 10 - 10);
+    });
+    // const artists = await userModel.findArtists(page * 10 - 10);
+    const artistList = artistCached.map((artist) => {
       let artResponse: ArtistListResponse;
       artResponse = {
         user_id: artist.userId!,

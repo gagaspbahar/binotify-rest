@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import User from "../types/user";
 import { LoginRequest } from "../types/request";
+import { Cache } from "../core/cache";
 
 const jwt = require("jsonwebtoken");
 
@@ -60,10 +61,10 @@ const loginHandler = async (req: Request<LoginRequest>, res: Response) => {
 };
 
 const registerHandler = async (req: Request<User>, res: Response) => {
-  console.log(req.body);
   const initialUser: User = req.body;
   const user = { isAdmin: false, ...initialUser };
-  console.log(user);
+  const cache: Cache = new Cache();
+  await cache.connect();
   user.password = await bcrypt.hash(user.password!, 10);
   try {
     const userModel = new UserModel();
@@ -71,6 +72,7 @@ const registerHandler = async (req: Request<User>, res: Response) => {
     res.status(200).json({
       message: "User created with user id " + newUserID,
     });
+    cache.del("artistList");
   } catch (err) {
     res.status(500).json({
       message: "Error " + err,
