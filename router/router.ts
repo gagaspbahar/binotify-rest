@@ -4,8 +4,6 @@ import { loginHandler, registerHandler } from "../service/auth";
 
 const router = express.Router();
 
-// const { loginHandler, registerHandler } = require("../service/auth");
-
 import {
   createSongHandler,
   readSongHandler,
@@ -35,7 +33,7 @@ router.put("/song/:id", updateSongHandler);
 
 router.delete("/song/:id", deleteSongHandler);
 
-router.get("/song/artist/:id", songListHandler);
+router.get("/artist/song/:id", songListHandler);
 
 router.get("/artist", artistListHandler);
 

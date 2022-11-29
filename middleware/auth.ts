@@ -12,6 +12,10 @@ function verifyToken(token: string) {
   return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 }
 
+function extractPayload(token: string): Payload {
+  return jwt.decode(token);
+}
+
 function authenticateUser(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
@@ -88,4 +92,4 @@ function authenticateSpecificUser(
 //   );
 // }
 
-export { authenticateUser, authenticateAdmin, authenticateSpecificUser };
+export { extractPayload, authenticateUser, authenticateAdmin, authenticateSpecificUser };

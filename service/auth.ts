@@ -32,7 +32,7 @@ const loginHandler = async (req: Request<LoginRequest>, res: Response) => {
               const token = jwt.sign(
                 {
                   username: user.username,
-                  email: user.email,
+                  userId: user.userId,
                   isAdmin: user.isAdmin,
                 },
                 process.env.ACCESS_TOKEN_SECRET,

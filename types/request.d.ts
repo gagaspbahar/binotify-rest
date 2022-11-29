@@ -8,4 +8,10 @@ type SongRequest = {
   penyanyi: string;
 }
 
-export { LoginRequest, SongRequest }
+type SoapEndpoint = {
+  url: string;
+  template: string;
+  headers: object;
+}
+
+export { LoginRequest, SongRequest, SoapEndpoint }
