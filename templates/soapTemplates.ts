@@ -16,7 +16,7 @@ const checkSubscriptionTemplate =
   </soap:Envelope>`
 
 const checkSubscription: SoapEndpoint = {
-  url: "http://localhost:8888/ws/subscription",
+  url: process.env.SOAP_URL || "http://localhost:8888/ws/subscription",
   template: checkSubscriptionTemplate,
   headers: {
     "Content-Type": "text/xml;charset=UTF-8",
