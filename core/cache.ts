@@ -5,7 +5,7 @@ dotenv.config();
 
 export class Cache {
   private cache: ReturnType<typeof createClient>;
-  private ttl: number = 60 * 60 * 24; // 1 day
+  private ttl: number = 60 * 60; // 1 hour
 
   constructor(ttl?: number) {
     this.ttl = ttl || this.ttl;
