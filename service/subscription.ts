@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllSubscriptionRequest, updateSubscription } from "../templates/soapTemplates";
+import { getAllSubscriptionRequest, updateSubscription, newSubscription } from "../templates/soapTemplates";
 import { Subscription } from "../types/subscription";
 import UserModel from '../models/user';
 const util = require("util");
@@ -73,4 +73,26 @@ const updateSubscriptionHandler = async (req: Request, res: Response) => {
   }
 }
 
-export { getAllSubscriptionRequestsHandler, updateSubscriptionHandler };
+const newSubscriptionHandler = async (req: Request, res: Response) => {
+  const xml = util.format(newSubscription.template, parseInt(req.body.subscriber_id), parseInt(req.body.creator_id));
+  console.log(xml)
+  try {
+    const { response } = await soapRequest({
+      url: newSubscription.url,
+      headers: newSubscription.headers,
+      xml: xml,
+    });
+    const { headers, body, statusCode } = response;
+    res.status(200).json({
+      message: "Successfully created subscription",
+      data: req.body.status,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error " + err,
+      data: []
+    });
+  }
+}
+
+export { getAllSubscriptionRequestsHandler, updateSubscriptionHandler, newSubscriptionHandler };
