@@ -9,12 +9,18 @@ import {
   readSongHandler,
   updateSongHandler,
   deleteSongHandler,
+  songListManagementHandler,
 } from "../service/song";
 
 import { songListHandler, artistListHandler } from "../service/artist";
 
-import { authenticateUser, authenticateAdmin, authenticateSpecificUser } from "../middleware/auth";
 import { getAllSubscriptionRequestsHandler, updateSubscriptionHandler } from "../service/subscription";
+
+import {
+  authenticateUser,
+  authenticateAdmin,
+  authenticateSpecificUser,
+} from "../middleware/auth";
 
 router.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server - Hello World!");
@@ -30,6 +36,8 @@ router.use("/song", authenticateUser);
 router.post("/song", createSongHandler);
 
 router.get("/song/:id", readSongHandler);
+
+router.get("/songlist/:id", songListManagementHandler);
 
 router.put("/song/:id", updateSongHandler);
 
