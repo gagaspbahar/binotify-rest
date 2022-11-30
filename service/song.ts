@@ -2,10 +2,6 @@ import { SongModel } from "../models/song";
 import { Request, Response } from "express";
 import { SongRequest } from "../types/request";
 import Song from "../types/song";
-import { extractPayload } from "../middleware/auth";
-import { checkSubscription } from "../templates/soapTemplates";
-const util = require("util");
-const soapRequest = require("easy-soap-request");
 
 const createSongHandler = async (req: Request<Song>, res: Response) => {
   const song: Song = req.body;

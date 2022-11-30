@@ -22,7 +22,8 @@
     "path": "^0.12.7",
     "pg": "^8.8.0",
     "redis": "^4.5.1",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

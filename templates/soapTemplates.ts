@@ -1,11 +1,15 @@
-import { SoapEndpoint } from "../types/request"
-import dotenv from 'dotenv';
+import { SoapEndpoint } from "../types/request";
+import dotenv from "dotenv";
 
 dotenv.config();
 
+const url = process.env.SOAP_URL || "http://localhost:8888/ws/subscription";
+const headers = {
+  "Content-Type": "text/xml;charset=UTF-8",
+  "X-API-KEY": process.env.SOAP_API_KEY,
+};
 
-const checkSubscriptionTemplate = 
-  `<?xml version="1.0" encoding="utf-8"?>
+const checkSubscriptionTemplate = `<?xml version="1.0" encoding="utf-8"?>
   <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
     <soap:Body>
       <checkSubscription xmlns="http://service.binotify.com/">
@@ -13,15 +17,44 @@ const checkSubscriptionTemplate =
           <creator>%d</creator>
       </checkSubscription>
     </soap:Body>
-  </soap:Envelope>`
+  </soap:Envelope>`;
 
 const checkSubscription: SoapEndpoint = {
-  url: process.env.SOAP_URL || "http://localhost:8888/ws/subscription",
+  url: url,
   template: checkSubscriptionTemplate,
-  headers: {
-    "Content-Type": "text/xml;charset=UTF-8",
-    "X-API-KEY": process.env.SOAP_API_KEY
-  }
+  headers: headers,
+};
+
+const getAllSubscriptionRequestTemplate = `<?xml version="1.0" encoding="utf-8"?>
+  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+      <getAllSubscriptionRequest xmlns="http://service.binotify.com/">
+          <page>%d</page>
+      </getAllSubscriptionRequest>
+    </soap:Body>
+  </soap:Envelope>`;
+
+const getAllSubscriptionRequest: SoapEndpoint = {
+  url: url,
+  template: getAllSubscriptionRequestTemplate,
+  headers: headers,
+};
+
+const UpdateSubscriptionTemplate = `<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <updateSubscription xmlns="http://service.binotify.com/">
+        <subscriber>%d</subscriber>
+        <creator>%d</creator>
+        <status>%s</status>
+    </updateSubscription>
+  </soap:Body>
+</soap:Envelope>`;
+
+const updateSubscription: SoapEndpoint = {
+  url: url,
+  template: UpdateSubscriptionTemplate,
+  headers: headers,
 }
 
-export { checkSubscription }
+export { checkSubscription, getAllSubscriptionRequest, updateSubscription };
