@@ -6,7 +6,6 @@ const path = require("path");
 const fs = require("fs");
 
 const pathHandler = () => {
-  console.log(path.join(__dirname, "static"));
   if (!fs.existsSync(path.join(__dirname, "../static"))) {
     fs.mkdirSync(path.join(__dirname, "../static"));
   }

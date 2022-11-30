@@ -1,6 +1,6 @@
 import express, { Request, Response, Express } from "express";
 
-import { loginHandler, registerHandler } from "../service/auth";
+import { checkUsernameHandler, loginHandler, registerHandler } from "../service/auth";
 
 const router = express.Router();
 
@@ -55,5 +55,7 @@ router.get("/subscription", getAllSubscriptionRequestsHandler);
 router.put("/subscription/update", updateSubscriptionHandler);
 
 router.post("/artist/subscribe", newSubscriptionHandler);
+
+router.get("/username", checkUsernameHandler);
 
 module.exports = router;

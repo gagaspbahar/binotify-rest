@@ -93,6 +93,13 @@ class UserModel {
     );
     return result.rows.map(UserModel.rowsToUser);
   }
+  
+  async findUsernames() {
+    const result = await this.pool.query(
+      `SELECT username FROM users`
+    );
+    return result.rows;
+  }
 }
 
 export default UserModel;

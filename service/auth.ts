@@ -80,4 +80,31 @@ const registerHandler = async (req: Request<User>, res: Response) => {
   }
 };
 
-export { loginHandler, registerHandler };
+const checkUsernameHandler = async (req: Request, res: Response) => {
+  const userModel = new UserModel();
+  const username = req.query.username as string;
+  const cache: Cache = new Cache();
+  await cache.connect();
+  try {
+    const userCached = await cache.get("usernameList", async () => {
+      return await userModel.findUsernames();
+    });
+    if (userCached.find(x => x.username === username) !== undefined) {
+      res.status(200).json({
+        message: "Username already exists",
+        data: true,
+      });
+    } else {
+      res.status(200).json({
+        message: "Username is available",
+        data: false,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: "Error " + err,
+    });
+  }
+};
+
+export { loginHandler, registerHandler, checkUsernameHandler };
