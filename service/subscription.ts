@@ -27,8 +27,11 @@ const getAllSubscriptionRequestsHandler = async (
         result["S:Envelope"]["S:Body"][0][
           "ns2:getAllSubscriptionRequestResponse"
         ][0]["return"][0];
-
-      subscriptionRequests = JSON.parse(data).data;
+      try{
+        subscriptionRequests = JSON.parse(data).data;
+      } catch {
+        subscriptionRequests = [];
+      }
       
       // TODO: Dipercepat
       for (let i = 0; i < subscriptionRequests.length; i++) {

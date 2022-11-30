@@ -38,7 +38,7 @@ const loginHandler = async (req: Request<LoginRequest>, res: Response) => {
                 },
                 process.env.ACCESS_TOKEN_SECRET,
                 {
-                  expiresIn: "1h",
+                  expiresIn: "7d",
                 }
               );
               return res.status(200).json({
