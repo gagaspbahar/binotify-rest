@@ -3,6 +3,7 @@ import Database from "../core/database";
 import User from "../types/user";
 
 const nullUser: User = {
+  userId: 0,
   username: "",
   password: "",
   email: "",

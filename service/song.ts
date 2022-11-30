@@ -104,9 +104,34 @@ const deleteSongHandler = async (req: Request, res: Response) => {
   }
 };
 
+const songListManagementHandler = async (req: Request, res: Response) => {
+  const songModel = new SongModel();
+  const userId = parseInt(req.params.id);
+  const page = parseInt(req.query.page as string);
+
+  try {
+    const songList = await songModel.findSongsByArtistId(
+      userId,
+      page * 10 - 10
+    );
+    res.status(200).json({
+      message: "Song list retrieved",
+      data: {
+        songList: songList,
+      },
+      page: page,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error " + err,
+    });
+  }
+};
+
 export {
   createSongHandler,
   readSongHandler,
   updateSongHandler,
   deleteSongHandler,
+  songListManagementHandler,
 };
