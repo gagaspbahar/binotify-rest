@@ -53,4 +53,12 @@ export class Cache {
   flush() {
     this.cache.flushAll();
   }
+
+  deleteContains(key: string) {
+    this.cache.keys(key + "*").then((keys) => {
+      keys.forEach((key) => {
+        this.cache.del(key);
+      });
+    });
+  }
 }

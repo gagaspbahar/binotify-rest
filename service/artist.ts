@@ -46,7 +46,7 @@ const artistListHandler = async (req: Request, res: Response) => {
   const userModel: UserModel = new UserModel();
   const page = parseInt(req.query.page as string);
   try {
-    const artistCached = await cache.get("artistList", async () => {
+    const artistCached = await cache.get("artistList:" + page, async () => {
       return await userModel.findArtists(page * 10 - 10);
     });
     // const artists = await userModel.findArtists(page * 10 - 10);
