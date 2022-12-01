@@ -5,7 +5,11 @@ import Song from "../types/song";
 
 const createSongHandler = async (req: Request<Song>, res: Response) => {
   const song: Song = req.body;
-  const filepath = req.file?.path.split("static\\")[1];
+  console.log(req.file?.path)
+  let filepath = req.file?.path.split("static\\")[1];
+  if (filepath === undefined) {
+    filepath = req.file?.path.split("static/")[1];
+  }
   const createdSong: Song = {
     title: song.title,
     artist_id: song.artist_id,
@@ -59,7 +63,10 @@ const updateSongHandler = async (req: Request, res: Response) => {
     let updatedSong: Song;
 
     if (req.file !== undefined) {
-      const filepath = req.file?.path.split("static\\")[1];
+      let filepath = req.file?.path.split("static\\")[1];
+      if (filepath === undefined) {
+        filepath = req.file?.path.split("static/")[1];
+      }
       updatedSong = {
         ...initialSong,
         audio_path: "/static/" + filepath,
