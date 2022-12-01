@@ -76,14 +76,18 @@ const artistListHandler = async (req: Request, res: Response) => {
 };
 
 const getNameHandler = async (req: Request, res: Response) => {
+  const cache: Cache = new Cache();
+  await cache.connect();
   const userModel: UserModel = new UserModel();
   const id = parseInt(req.params.id);
   try {
-    const name = await userModel.findNameById(id);
+    const nameCached = await cache.get("artistName:" + id, async () => {
+      return await userModel.findNameById(id);
+    });
     res.status(200).json({
       message: "Name retrieved",
       data: {
-        name: name,
+        name: nameCached,
       },
     });
   } catch (err) {
