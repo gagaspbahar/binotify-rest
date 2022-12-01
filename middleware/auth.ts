@@ -24,7 +24,7 @@ function authenticateUser(req: Request, res: Response, next: NextFunction) {
   jwt.verify(
     token,
     process.env.ACCESS_TOKEN_SECRET,
-    (err: JsonWebTokenError, user: any) => {
+    (err: JsonWebTokenError, user: Payload) => {
       if (err) return next(err);
       return next();
     }
@@ -39,7 +39,7 @@ function authenticateAdmin(req: Request, res: Response, next: NextFunction) {
   jwt.verify(
     token,
     process.env.ACCESS_TOKEN_SECRET,
-    (err: JsonWebTokenError, user: any) => {
+    (err: JsonWebTokenError, user: Payload) => {
       if (err) return next(err);
       if (user.isAdmin) return next();
       else return next(err);
@@ -59,9 +59,9 @@ function authenticateSpecificUser(
   jwt.verify(
     token,
     process.env.ACCESS_TOKEN_SECRET,
-    (err: JsonWebTokenError, user: any) => {
+    (err: JsonWebTokenError, user: Payload) => {
       if (err) return next(err);
-      if (user.userId == req.params.id) return next();
+      if (user.userId == parseInt(req.params.id)) return next();
       else return res.sendStatus(401);
     }
   );
