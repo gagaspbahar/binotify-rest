@@ -20,6 +20,7 @@ import {
   authenticateUser,
   authenticateAdmin,
   authenticateSpecificUser,
+  authenticateUserBySongId,
 } from "../middleware/auth";
 
 router.get("/", (req: Request, res: Response) => {
@@ -37,7 +38,7 @@ router.post("/song", createSongHandler);
 
 router.get("/song/:id", readSongHandler);
 
-router.use("/song/:id", authenticateSpecificUser);
+router.use("/song/:id", authenticateUserBySongId);
 
 router.use("/songlist/:id", authenticateSpecificUser)
 

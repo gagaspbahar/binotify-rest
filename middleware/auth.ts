@@ -66,29 +66,29 @@ function authenticateSpecificUser(
   );
 }
 
-// function authenticateUserBySongId(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   const authHeader = req.headers["authorization"];
-//   const token = authHeader && authHeader.split(" ")[1];
-//   if (token == null) return res.sendStatus(401);
+function authenticateUserBySongId(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
 
 
-//   jwt.verify(
-//     token,
-//     process.env.ACCESS_TOKEN_SECRET,
-//     (err: JsonWebTokenError, user: any) => {
-//       const authCheckModel = new AuthCheckModel();
-//       const songId = parseInt(req.params.id);
-//       const userId = user.user_id;
-//       const checkSong = await authCheckModel.checkSong(songId, userId);
-//       if (err) return next(err);
-//       if (user.user_id === req.params.user_id && checkSong) return next();
-//       else return next(err);
-//     }
-//   );
-// }
+  jwt.verify(
+    token,
+    process.env.ACCESS_TOKEN_SECRET,
+    async (err: JsonWebTokenError, user: any) => {
+      const authCheckModel = new AuthCheckModel();
+      const songId = parseInt(req.params.id);
+      const userId = user.user_id;
+      const checkSong = await authCheckModel.checkSong(songId, userId);
+      if (err) return next(err);
+      if (user.user_id === req.params.user_id && checkSong) return next();
+      else return next(err);
+    }
+  );
+}
 
-export { extractPayload, authenticateUser, authenticateAdmin, authenticateSpecificUser };
+export { extractPayload, authenticateUser, authenticateAdmin, authenticateSpecificUser, authenticateUserBySongId };
