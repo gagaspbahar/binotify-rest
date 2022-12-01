@@ -17,6 +17,16 @@ class SongModel {
     };
   }
 
+  static rowsWithArtistToSong(row: any): any {
+    return {
+      songId: row.song_id,
+      title: row.judul,
+      artist_id: row.penyanyi_id,
+      audio_path: row.audio_path,
+      artist_name: row.name,
+    };
+  }
+
   async create(title: string, artist_id: number, audio_path: string) {
     const result = await this.pool.query(
       `INSERT INTO songs (judul, penyanyi_id, audio_path) VALUES ($1, $2, $3) RETURNING song_id`,
@@ -80,12 +90,11 @@ class SongModel {
 
   async findPremiumSongs(page: number, creator_ids: number[]) {
     const stringCreatorIds = creator_ids.join(",") ;
-    console.log(stringCreatorIds);
     const result = await this.pool.query(
-      `SELECT * FROM songs WHERE penyanyi_id in (${stringCreatorIds}) ORDER BY song_id LIMIT 10 OFFSET $1`,
-      [ page]
+      `SELECT s.*, u."name" FROM songs s left join users u on u.user_id = s.penyanyi_id WHERE penyanyi_id in (${stringCreatorIds}) ORDER BY song_id LIMIT 10 OFFSET $1`,
+      [page]
     );
-    return result.rows.map(SongModel.rowsToSong);
+    return result.rows.map(SongModel.rowsWithArtistToSong);
   }
 }
 
