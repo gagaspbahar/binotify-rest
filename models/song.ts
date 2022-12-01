@@ -49,7 +49,6 @@ class SongModel {
     return result.rows.map(SongModel.rowsToSong);
   }
 
-
   async update(
     songId: number,
     title: string,
@@ -71,9 +70,9 @@ class SongModel {
     return result.rowCount;
   }
 
-  async getLink(songId: number) {
+  async getSongInfo(songId: number) {
     const result = await this.pool.query(
-      `SELECT audio_path FROM songs WHERE song_id = $1`,
+      `SELECT audio_path, judul FROM songs WHERE song_id = $1`,
       [songId]
     );
     return result.rows[0].audio_path;
