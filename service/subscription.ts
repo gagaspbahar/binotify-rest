@@ -75,7 +75,6 @@ const updateSubscriptionHandler = async (req: Request, res: Response) => {
 
 const newSubscriptionHandler = async (req: Request, res: Response) => {
   const xml = util.format(newSubscription.template, parseInt(req.body.subscriber_id), parseInt(req.body.creator_id));
-  console.log(xml)
   try {
     const { response } = await soapRequest({
       url: newSubscription.url,

@@ -60,10 +60,8 @@ function authenticateSpecificUser(
     token,
     process.env.ACCESS_TOKEN_SECRET,
     (err: JsonWebTokenError, user: any) => {
-      console.log(user.userId);
-      console.log(req.params.id);
       if (err) return next(err);
-      if (user.userId === req.params.id) return next();
+      if (user.userId == req.params.id) return next();
       else return res.sendStatus(401);
     }
   );
