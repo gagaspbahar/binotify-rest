@@ -33,9 +33,13 @@ router.post("/register", registerHandler);
 
 router.use("/song", authenticateUser);
 
+router.use("/song/:id", authenticateSpecificUser);
+
 router.post("/song", createSongHandler);
 
 router.get("/song/:id", readSongHandler);
+
+router.use("/songlist/:id", authenticateSpecificUser)
 
 router.get("/songlist/:id", songListManagementHandler);
 
