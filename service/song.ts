@@ -7,7 +7,8 @@ const createSongHandler = async (req: Request<Song>, res: Response) => {
   const song: Song = req.body;
   const filepath = req.file?.path.split("static\\")[1];
   const createdSong: Song = {
-    ...song,
+    title: song.title,
+    artist_id: song.artist_id,
     audio_path: "/static/" + filepath,
   };
   try {
@@ -31,11 +32,15 @@ const readSongHandler = async (req: Request, res: Response) => {
   const songModel = new SongModel();
   const songID = parseInt(req.params.id);
   try {
-    const songLink = await songModel.getLink(songID);
+    const song = await songModel.findSongById(songID);
+    console.log(song);
+    const filename = song.audio_path?.slice(8);
+    console.log(filename);
     res.status(200).json({
       message: "Song link retrieved",
       data: {
-        link: songLink,
+        title: song.title,
+        filename: filename,
       },
     });
   } catch (err) {
