@@ -75,4 +75,22 @@ const artistListHandler = async (req: Request, res: Response) => {
   }
 };
 
-export { songListHandler, artistListHandler };
+const getNameHandler = async (req: Request, res: Response) => {
+  const userModel: UserModel = new UserModel();
+  const id = parseInt(req.params.id);
+  try {
+    const name = await userModel.findNameById(id);
+    res.status(200).json({
+      message: "Name retrieved",
+      data: {
+        name: name,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error " + err,
+    });
+  }
+}
+
+export { songListHandler, artistListHandler, getNameHandler };

@@ -12,7 +12,7 @@ import {
   songListManagementHandler,
 } from "../service/song";
 
-import { songListHandler, artistListHandler } from "../service/artist";
+import { songListHandler, artistListHandler, getNameHandler } from "../service/artist";
 
 import { getAllSubscriptionRequestsHandler, updateSubscriptionHandler, newSubscriptionHandler } from "../service/subscription";
 
@@ -61,5 +61,7 @@ router.put("/subscription/update", updateSubscriptionHandler);
 router.post("/artist/subscribe", newSubscriptionHandler);
 
 router.get("/username", checkUsernameHandler);
+
+router.get("/name/:id", getNameHandler)
 
 module.exports = router;
