@@ -73,4 +73,19 @@ const newSubscription: SoapEndpoint = {
   headers: headers,
 };
 
-export { checkSubscription, getAllSubscriptionRequest, updateSubscription, newSubscription };
+const getSubscribedArtistsTemplate = `<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <getAllSubscribedArtistsBySubscriber xmlns="http://service.binotify.com/">
+        <subscriber>%d</subscriber>
+    </getAllSubscribedArtistsBySubscriber>
+  </soap:Body>
+</soap:Envelope>`
+
+const getSubscribedArtists: SoapEndpoint = {
+  url: url,
+  template: getSubscribedArtistsTemplate,
+  headers: headers,
+}
+
+export { checkSubscription, getAllSubscriptionRequest, updateSubscription, newSubscription, getSubscribedArtists };

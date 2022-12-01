@@ -10,6 +10,7 @@ import {
   updateSongHandler,
   deleteSongHandler,
   songListManagementHandler,
+  premiumSongListHandler,
 } from "../service/song";
 
 import { songListHandler, artistListHandler, getNameHandler } from "../service/artist";
@@ -64,5 +65,7 @@ router.post("/artist/subscribe", newSubscriptionHandler);
 router.get("/username", checkUsernameHandler);
 
 router.get("/name/:id", getNameHandler)
+
+router.get("/premium/:id", premiumSongListHandler)
 
 module.exports = router;

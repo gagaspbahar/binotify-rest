@@ -2,6 +2,11 @@ import { SongModel } from "../models/song";
 import { Request, Response } from "express";
 import { SongRequest } from "../types/request";
 import Song from "../types/song";
+import { getSubscribedArtists, updateSubscription } from "../templates/soapTemplates";
+import { Subscription } from "../types/subscription";
+const util = require("util");
+const soapRequest = require("easy-soap-request");
+const xml2js = require("xml2js");
 
 const createSongHandler = async (req: Request<Song>, res: Response) => {
   const song: Song = req.body;
@@ -136,10 +141,58 @@ const songListManagementHandler = async (req: Request, res: Response) => {
   }
 };
 
+const premiumSongListHandler = async (req: Request, res: Response) => {
+  const songModel = new SongModel();
+  const userId = parseInt(req.params.id);
+  const page = parseInt(req.query.page as string);
+  const xml = util.format(getSubscribedArtists.template, userId);
+  let subscribedArtists: Subscription[] = [];
+  try {
+    const { response } = await soapRequest({
+      url: getSubscribedArtists.url,
+      headers: getSubscribedArtists.headers,
+      xml: xml,
+    })
+    const {headers, body, statusCode } = response;
+    const parser = new xml2js.Parser();
+    parser.parseString(body, async (err: any, result: any) => {
+      const data =
+        result["S:Envelope"]["S:Body"][0][
+          "ns2:getAllSubscribedArtistsBySubscriberResponse"
+        ][0]["return"][0];
+      try{
+        subscribedArtists = JSON.parse(data).data;
+      } catch {
+        subscribedArtists = [];
+      }
+      let artistIds: number[] = [];
+      
+      for (let i = 0; i < subscribedArtists.length; i++) {
+        artistIds[i] = subscribedArtists[i].creator_id;
+      }
+      
+      const songList = await songModel.findPremiumSongs(page * 10 - 10, artistIds);
+
+      res.status(200).json({
+        message: "Premium song list retrieved",
+        data: {
+          songList: songList,
+        },
+        page: page,
+      });
+    })
+  } catch (err) {
+    res.status(500).json({
+      message: "Error " + err,
+    });
+  }
+}
+
 export {
   createSongHandler,
   readSongHandler,
   updateSongHandler,
   deleteSongHandler,
   songListManagementHandler,
+  premiumSongListHandler,
 };

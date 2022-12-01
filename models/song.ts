@@ -77,6 +77,16 @@ class SongModel {
     );
     return result.rows[0].audio_path;
   }
+
+  async findPremiumSongs(page: number, creator_ids: number[]) {
+    const stringCreatorIds = creator_ids.join(",") ;
+    console.log(stringCreatorIds);
+    const result = await this.pool.query(
+      `SELECT * FROM songs WHERE penyanyi_id in (${stringCreatorIds}) ORDER BY song_id LIMIT 10 OFFSET $1`,
+      [ page]
+    );
+    return result.rows.map(SongModel.rowsToSong);
+  }
 }
 
 export { SongModel, Song };
