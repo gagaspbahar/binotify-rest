@@ -47,7 +47,7 @@ const loginHandler = async (req: Request<LoginRequest>, res: Response) => {
               });
             }
             res.status(401).json({
-              message: "Login failed",
+              message: "Login failed. Wrong username or password.",
             });
           });
         }
@@ -70,7 +70,7 @@ const registerHandler = async (req: Request<User>, res: Response) => {
     const userModel = new UserModel();
     const newUserID = await userModel.create(user);
     res.status(200).json({
-      message: "User created with user id " + newUserID,
+      message: "Successfully registered as " + user.username,
     });
     cache.deleteContains("artistList");
   } catch (err) {

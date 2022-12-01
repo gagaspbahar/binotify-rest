@@ -19,7 +19,7 @@ const createSongHandler = async (req: Request<Song>, res: Response) => {
       createdSong.audio_path!
     );
     res.status(200).json({
-      message: "Song created with song id " + newSongID,
+      message: `Song ${createdSong.title} created with song id ` + newSongID,
     });
   } catch (err) {
     res.status(500).json({
@@ -81,7 +81,7 @@ const updateSongHandler = async (req: Request, res: Response) => {
       updatedSong.audio_path!
     );
     res.status(200).json({
-      message: "Song updated",
+      message: "Song has been successfully updated.",
     });
   } catch (err) {
     res.status(500).json({
