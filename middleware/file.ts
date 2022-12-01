@@ -25,6 +25,23 @@ const diskStorage = multer.diskStorage({
   },
 });
 
-const multerUpload = multer({ storage: diskStorage }).single("file");
+function checkFileType(file: any, cb: any){
+  // Allowed ext
+  const filetypes = /mp3/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = file.mimetype == "audio/mpeg";
+
+  if(mimetype && extname){
+    return cb(null,true);
+  } else {
+    cb('Error: mp3 only.');
+  }
+}
+
+const multerUpload = multer({ storage: diskStorage, fileFilter: (req:any, file:any, cb: any) => {
+  checkFileType(file, cb);
+}}).single("file");
 
 export default multerUpload;
