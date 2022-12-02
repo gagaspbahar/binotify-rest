@@ -69,4 +69,13 @@ Alternatif 2: Docker
 
 ### Pembagian Tugas
 
+1. Initial Project Setup: 13520016
+2. Authentication: 13520016, 13520076
+3. Song Management CRUD: 13520016, 13520073
+4. Artist List: 13520016, 13520076
+5. Song List by Artist: 13520016, 13520073
+6. File Serving: 13520016
+7. SOAP Integration: 13520016
+8. Cache: 13520016
+
 #### Proudly Presented by Binosed, 2022
