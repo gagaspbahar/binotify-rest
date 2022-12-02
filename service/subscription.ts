@@ -73,6 +73,28 @@ const updateSubscriptionHandler = async (req: Request, res: Response) => {
   }
 }
 
+const resubscribeHandler = async (req: Request, res: Response) => {
+  const xml = util.format(updateSubscription.template, req.body.subscriber_id, req.body.creator_id, "PENDING");
+  try {
+    const { response } = await soapRequest({
+      url: updateSubscription.url,
+      headers: updateSubscription.headers,
+      xml: xml,
+    });
+    const { headers, body, statusCode } = response;
+    res.status(200).json({
+      message: "Successfully updated subscription",
+      data: req.body.status,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error " + err,
+      data: []
+    });
+  }
+}
+
+
 const newSubscriptionHandler = async (req: Request, res: Response) => {
   const xml = util.format(newSubscription.template, parseInt(req.body.subscriber_id), parseInt(req.body.creator_id));
   try {
@@ -94,4 +116,4 @@ const newSubscriptionHandler = async (req: Request, res: Response) => {
   }
 }
 
-export { getAllSubscriptionRequestsHandler, updateSubscriptionHandler, newSubscriptionHandler };
+export { getAllSubscriptionRequestsHandler, updateSubscriptionHandler, newSubscriptionHandler, resubscribeHandler };

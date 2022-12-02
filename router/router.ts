@@ -15,7 +15,7 @@ import {
 
 import { songListHandler, artistListHandler, getNameHandler } from "../service/artist";
 
-import { getAllSubscriptionRequestsHandler, updateSubscriptionHandler, newSubscriptionHandler } from "../service/subscription";
+import { getAllSubscriptionRequestsHandler, updateSubscriptionHandler, newSubscriptionHandler, resubscribeHandler } from "../service/subscription";
 
 import {
   authenticateUser,
@@ -53,12 +53,14 @@ router.get("/artist/song/:id", songListHandler);
 
 router.get("/artist", artistListHandler);
 
+router.put("/resubscribe", resubscribeHandler);
 
 router.use("/subscription", authenticateAdmin);
 
 router.get("/subscription", getAllSubscriptionRequestsHandler);
 
 router.put("/subscription/update", updateSubscriptionHandler);
+
 
 router.post("/artist/subscribe", newSubscriptionHandler);
 
